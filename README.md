@@ -1,12 +1,10 @@
 # Monsanto
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/monsanto`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Similar to Seedbank, but with automatic dependency sorting.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your Rails 4+ application's Gemfile:
 
 ```ruby
 gem 'monsanto'
@@ -16,13 +14,24 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install monsanto
-
 ## Usage
 
-TODO: Write usage instructions here
+Create a directory strucure for your rake tasks that looks like this:
+
+    /lib/tasks/populate/
+
+Inside the populate directory, create another directory to tell Monsanto the environment you'd like to populate. If you'd like to populate your development environment, do:
+
+    /lib/tasks/populate/development/
+
+If your application has wine reviews, with each review belonging to both a reviewer of class "User" and a wine, and with each wine belonging to a winery, create populators for each of these models, like so:
+
+    /lib/tasks/populate/development/users.populator.rb
+    /lib/tasks/populate/development/reviews.populator.rb
+    /lib/tasks/populate/development/wine.populator.rb
+    /lib/tasks/populate/development/wineries.populator.rb
+
+Use the same syntax and conventions you'd use in a standard Rails seed.rb file. Once you run rake db:populate:development, Monsanto will use ActiveRecord reflection and tsort to run them in the correct order.
 
 ## Development
 
