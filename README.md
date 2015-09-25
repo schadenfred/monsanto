@@ -1,6 +1,6 @@
 # Monsanto
 
-Similar to Seedbank, but with automatic dependency sorting.
+Similar to [Seedbank](https://github.com/james2m/seedbank "Title"), but with automatic dependency sorting.
 
 ## Installation
 
