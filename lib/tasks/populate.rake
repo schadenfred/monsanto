@@ -12,7 +12,7 @@ namespace 'db' do
     end
 
     def ordered_populators(environment_path)
-      dependency_hash = TsortableHash[]
+      dependency_hash = Monsanto::TsortableHash[]
 
       
       pops = populators(environment_path) 
@@ -21,7 +21,8 @@ namespace 'db' do
         parents = []
         klass.reflect_on_all_associations(:belongs_to).each do |parent|
           unless parent.options[:polymorphic]
-            parents << parent.name
+            
+            parents << parent.table_name.singularize.to_sym
             end 
           end
         dependency_hash[populator.singularize.to_sym] = parents
@@ -41,6 +42,7 @@ namespace 'db' do
             task populator => :environment do 
               populator_file = File.read("lib/tasks/populate/#{environment}/#{populator}.populator.rb")
               eval(populator_file)
+
             end
           end
         end
@@ -51,7 +53,6 @@ namespace 'db' do
           Rake::Task["db:drop"].invoke
           Rake::Task["db:create"].invoke
           Rake::Task["db:migrate"].invoke
-          
           ordered_populators(environment_path).each do |populator|
             Rake::Task["db:populate:#{environment}:#{populator.to_s.pluralize}"].invoke
           end
