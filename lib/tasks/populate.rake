@@ -2,6 +2,13 @@ namespace 'db' do
 
   namespace 'populate' do
 
+    def satisfy_dependencies(dependencies)
+
+      dependencies.each do |populator|
+        Rake::Task["db:populate:development:#{populator}"].invoke
+      end
+    end
+
     def populators(environment_path)
       populators = []
       populator_paths = Dir.glob(environment_path + "*.populator.rb")
@@ -40,7 +47,10 @@ namespace 'db' do
 
             desc "Populate #{environment} db with #{populator} populator"
             task populator => :environment do 
+
+              Rails.application.eager_load!
               populator_file = File.read("lib/tasks/populate/#{environment}/#{populator}.populator.rb")
+
               eval(populator_file)
 
             end
